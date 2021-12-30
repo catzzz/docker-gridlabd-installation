@@ -100,7 +100,7 @@ WORKDIR "/usr/local/src/"
 RUN git clone https://github.com/slacgismo/gridlabd
 WORKDIR "/usr/local/src/gridlabd"
 RUN autoreconf -isf && ./configure
-RUN make system
+RUN make -j6 system
 RUN /usr/local/bin/python3 -m pip install --upgrade numpy
 
 # fail only one validation

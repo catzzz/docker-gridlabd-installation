@@ -37,8 +37,9 @@ RUN curl https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz > Python-3.9.6
 RUN tar xzf Python-3.9.6.tgz 
 
 WORKDIR "/usr/local/src/Python-3.9.6"
-#RUN ./configure --enable-optimizations --enable-shared CXXFLAGS="-fPIC"
-RUN ./configure --prefix=/usr/local --enable-optimizations --with-system-ffi --with-computed-gotos --enable-loadable-sqlite-extensions CFLAGS="-fPIC"
+#RUN ./configure --prefix=/usr/local --enable-loadable-sqlite-extensions --with-system-ffi  --enable-optimizations --enable-shared CXXFLAGS="-fPIC"
+#RUN ./configure --prefix=/usr/local --enable-optimizations --with-system-ffi --with-computed-gotos --enable-loadable-sqlite-extensions CFLAGS="-fPIC"
+RUN ./configure --prefix=/usr/local --enable-optimizations --with-system-ffi --enable-loadable-sqlite-extensions CFLAGS="-fPIC"
 
 RUN make -j10
 RUN make altinstall
@@ -50,6 +51,7 @@ RUN ln -sf /usr/local/bin/idle3.9 /usr/local/bin/idle
 RUN ln -sf /usr/local/bin/pip3.9 /usr/local/bin/pip3
 RUN /usr/local/bin/python3 -m pip install matplotlib Pillow pandas numpy networkx pytz pysolar PyGithub scikit-learn xlrd boto3
 RUN /usr/local/bin/python3 -m pip install IPython censusdata
+
 WORKDIR "/usr/local/src"
 RUN rm -f Python-3.9.6.tgz
 RUN pip3 install --upgrade pip
@@ -99,5 +101,5 @@ WORKDIR "/usr/local/src/"
 RUN git clone https://github.com/slacgismo/gridlabd
 WORKDIR "/usr/local/src/gridlabd"
 RUN autoreconf -isf && ./configure
-RUN make system
+RUN make -j6 system
 RUN /usr/local/bin/python3 -m pip install --upgrade numpy
