@@ -1,0 +1,10 @@
+ERROR    [INIT] : /usr/local/src/gridlabd/module/powerflow/autotest/test_violation_record.glm error unexpected, code 2 (environment startup/load failed) in 0.1 seconds
+Processing ./gridlabd/module/tape/autotest/test_tape_whitespace.glm...                         
+Validation report:
+699 models tested
+1 unexpected errors
+698 tests succeeded
+>99% success rate
+
+root@3a21f150df27:/usr/local/src/gridlabd# cat /usr/local/src/gridlabd/module/powerflow/autotest/test_violation_record/gridlabd.err
+ERROR    [2000-01-01 00:00:00 EST] : on_exit 0 'test "$(grep '2000-01-01 00:00:00 EST,line_630-632' violations.csv | cut -f3 -d,)" == "CURRENT"' command failed (return code 2)
