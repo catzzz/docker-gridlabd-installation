@@ -50,6 +50,7 @@ RUN ln -sf /usr/local/bin/idle3.9 /usr/local/bin/idle
 RUN ln -sf /usr/local/bin/pip3.9 /usr/local/bin/pip3
 RUN /usr/local/bin/python3 -m pip install matplotlib Pillow pandas numpy networkx pytz pysolar PyGithub scikit-learn xlrd boto3
 RUN /usr/local/bin/python3 -m pip install IPython censusdata
+RUN /usr/local/bin/python3 -m pip install Shapely==1.7.1
 WORKDIR "/usr/local/src"
 RUN rm -f Python-3.9.6.tgz
 RUN pip3 install --upgrade pip

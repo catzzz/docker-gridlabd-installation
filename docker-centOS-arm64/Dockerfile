@@ -11,8 +11,6 @@ RUN yum install svn -y
 
 
 
-
-
 RUN yum install 'dnf-command(config-manager)' -y
 
 #RUN yum config-manager --set-enabled PowerTools # error
@@ -38,18 +36,96 @@ RUN ln -sf /usr/local/bin/pip3.9 /usr/local/bin/pip3
 RUN pip3 install --upgrade pip
 
 RUN /usr/local/bin/python3 -m pip install matplotlib Pillow pandas numpy networkx pytz pysolar PyGithub scikit-learn xlrd boto3
-RUN /usr/local/bin/python3 -m pip install IPython censusdata
-# mac m1
-RUN /usr/local/bin/python3 -m pip install shapely 
-WORKDIR /usr/local/src
-RUN rm -f Python-3.9.6.tgz
+
+RUN  yum install proj-devel -y
+
+WORKDIR "/usr/local/src"
+
+RUN curl http://download.osgeo.org/gdal/jasper-1.900.1.uuid.tar.gz > jasper-1.900.1.uuid.tar.gz
+RUN tar xvf jasper-1.900.1.uuid.tar.gz
+
+WORKDIR "/usr/local/src/jasper-1.900.1.uuid"
+RUN ./configure --build=aarch64-unknown-linux-gnu 
+RUN make -j12
+RUN make install
+
+WORKDIR "/usr/local/src"
+RUN curl http://download.osgeo.org/gdal/3.4.0/gdal-3.4.0.tar.gz > gdal-3.4.0.tgz
+RUN tar xzf gdal-3.4.0.tgz 
+WORKDIR "/usr/local/src/gdal-3.4.0"
+RUN ./configure --with-python
+RUN make -j6
+RUN make install
+#https://stackoverflow.com/questions/34427788/how-to-successfully-install-pyproj-and-geopandas/51497039
+RUN /usr/local/bin/python3 -m pip install IPython censusdata geopandas
+
+# WORKDIR /usr/local/src
+# RUN rm -f Python-3.9.6.tgz
 
 RUN export PYTHONPATH="."
 RUN export PATH=/usr/local/bin:$PATH
 RUN export MAKEFLAGS=-j20
 RUN export PYTHONSETUPFLAGS="-j 20"
-# clone gridlabd 
-RUN git clone https://github.com/slacgismo/gridlabd
+
+
+# install fiona 
+# step 1 . 
+# install jasper
+# RUN wget http://download.osgeo.org/gdal/jasper-1.900.1.uuid.tar.gz
+# RUN tar xvf jasper-1.900.1.uuid.tar.gz
+# RUN cd jasper-1.900.1.uuid
+# # arm 64
+# RUN ./configure --build=aarch64-unknown-linux-gnu 
+# #x86
+# #RUN ./configure --build=x86_64-unknown-linux-gnu
+# RUN make -j6
+# RUN make install
+# # AttributeError: partially initialized module 'fiona' has no attribute '_loading' (most likely due to a circular import)
+# RUN dnf install libnsl
+
+# #https://stdworkflow.com/653/compile-and-install-gdal-on-linux-centos8-system
+# #https://stackoverflow.com/questions/4810996/how-to-resolve-configure-guessing-build-type-failure
+# # install proj 6 
+# RUN yum install  proj-devel -y
+# # install gdal
+# WORKDIR "/usr/local/src"
+# RUN curl http://download.osgeo.org/gdal/3.4.0/gdal-3.4.0.tar.gz
+# WORKDIR "/usr/local/src/gdal-3.4.0"
+# RUN ./configure --with-python
+# RUN make -j6
+# RUN make install
+# # install fiona 
+# RUN /usr/local/bin/python3 -m pip install fiona
+# # clone gridlabd 
+# WORKDIR "/usr/local/src/gridlabd"
+# COPY . .
+# RUN yum -y install epel-release
+# RUN yum install --enablerepo=epel gdal
+
+
+WORKDIR "/usr/local/src/gridlabd"
+COPY . .
+RUN autoreconf -isf && ./configure
+RUN make -j6 system
+RUN /usr/local/bin/python3 -m pip install --upgrade numpy
+RUN gridlabd -T 2 --validate
+# ENV GET_WEATHER=no
+# ENV REMOVE_SOURCE=no
+# ARG RUN_VALIDATION=no
+# ENV LD_LIBRARY_PATH /usr/local/lib
+
+# RUN export LD_LIBRARY_PATH=.:${LD_LIBRARY_PATH:-.}
+
+# # get weather
+# RUN if [ "${GET_WEATHER:-yes}" == "yes" ]; then make index ;fi
+
+# # run validation
+# RUN if [ "${RUN_VALIDATION:-no}" == "yes" ]; then gridlabd -T 0 --validate ;fi
+
+# # cleanup source
+# RUN if [ "${REMOVE_SOURCE:-yes}" == "yes" ]; then rm -rf /usr/local/src/gridlabd ; fi
+
+# RUN git clone https://github.com/slacgismo/gridlabd
 # WORKDIR "/usr/local/src/gridlabd"
 # RUN autoreconf -isf && ./configure
 # RUN make system
