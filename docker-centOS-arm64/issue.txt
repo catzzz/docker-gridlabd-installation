@@ -1,0 +1,22 @@
+ERROR    [INIT] : /usr/local/src/gridlabd/gldcore/geodata/autotest/test_datasets.glm error unexpected, code 5 (simulation failed) in 1.9 seconds
+ERROR    [INIT] : /usr/local/src/gridlabd/gldcore/scripts/autotest/test_geodata.glm error unexpected, code 5 (simulation failed) in 0.3 seconds
+ERROR    [INIT] : /usr/local/src/gridlabd/gldcore/scripts/autotest/test_geodata_address.glm error unexpected, code 5 (simulation failed) in 0.3 seconds
+ERROR    [INIT] : /usr/local/src/gridlabd/gldcore/scripts/autotest/test_geodata_elevation.glm error unexpected, code 5 (simulation failed) in 0.3 seconds
+ERROR    [INIT] : /usr/local/src/gridlabd/gldcore/scripts/autotest/test_geodata_utility.glm error unexpected, code 5 (simulation failed) in 0.3 seconds
+ERROR    [INIT] : /usr/local/src/gridlabd/gldcore/scripts/autotest/test_job.glm error unexpected, code 5 (simulation failed) in 1.1 seconds
+ERROR    [INIT] : /usr/local/src/gridlabd/gldcore/scripts/autotest/test_job_modfile.glm error unexpected, code 5 (simulation failed) in 1.2 seconds
+Starting validation test in directory '/usr/local/src/gridlabd'.glm...        
+
+[root@165a5c0599af gridlabd]# cat  /usr/local/src/gridlabd/gldcore/scripts/autotest/test_geodata/gridlabd.err
+Traceback (most recent call last):
+  File "/usr/local/opt/gridlabd/4.2.28-211226-origin_develop_fix_docker_installation/bin/gridlabd-geodata", line 358, in <module>
+    import geopandas
+  File "/usr/local/lib/python3.9/site-packages/geopandas/__init__.py", line 7, in <module>
+    from geopandas.io.file import _read_file as read_file  # noqa
+  File "/usr/local/lib/python3.9/site-packages/geopandas/io/file.py", line 20, in <module>
+    from fiona import Env as fiona_env
+  File "/usr/local/lib/python3.9/site-packages/fiona/__init__.py", line 85, in <module>
+    with fiona._loading.add_gdal_dll_directories():
+AttributeError: partially initialized module 'fiona' has no attribute '_loading' (most likely due to a circular import)
+ERROR    [INIT] : GldMain::subcommand(format='%s/gridlabd-%s',...): command '/usr/local/opt/gridlabd/4.2.28-211226-origin_develop_fix_docker_installation/bin/gridlabd-geodata create 37.4205,-122.2046
+' returns code 1
