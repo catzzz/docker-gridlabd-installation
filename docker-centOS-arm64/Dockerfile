@@ -57,6 +57,7 @@ RUN ./configure --with-python
 RUN make -j6
 RUN make install
 #https://stackoverflow.com/questions/34427788/how-to-successfully-install-pyproj-and-geopandas/51497039
+RUN /usr/local/bin/python3 -m pip install fiona
 RUN /usr/local/bin/python3 -m pip install IPython censusdata geopandas
 
 # WORKDIR /usr/local/src
